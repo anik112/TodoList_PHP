@@ -1,48 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../Script/style.css">
-</head>
+session_start();
 
-<body>
-    <div class="checkbox-container">
-        <h2 class="heading">To-do list</h2>
-        <div class="checkbox-group">
-            <input type="checkbox" id="checkbox1">
-            <label for="checkbox1">Listen to music</label>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="checkbox2">
-            <label for="checkbox2">Learn JavaScript</label>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="checkbox3">
-            <label for="checkbox3" class="checkbox-label">Watch a movie</label>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" id="checkbox4">
-            <label for="checkbox4">Read emails</label>
-        </div>
-    </div>
-</body>
+// get url and trim url
+$url = trim( parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/' );
 
-</html>
+// set all routes
+$routes = [
+    'deshbord' => './deshbord.php',
+    'login' => './login.php',
+    'user' => './user.php',
+    'delete' => './database/delete.php',
+    'update' => './database/update.php',
+    'logout' =>  './logout.php'
+];
 
-<script>
-    let checkboxes = document.querySelectorAll("input[type='checkbox']");
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener("click", checkboxHandler);
-    });
+ 
+$basedPage='login';
 
-    function checkboxHandler() {
-        if (this.checked === true) {
-            this.closest(".checkbox-group").classList.add("checked");
-        } else {
-            this.closest(".checkbox-group").classList.remove("checked");
-        }
+ //echo $url;
+
+if($url == null){
+    header("Location: $basedPage");
+}else{
+   
+    if(array_key_exists($url, $routes)){
+        require $routes[$url];
+    }else{
+        require '404error.html'; // otherwise call 404 page
     }
-</script>
+    
+}
+
+if(!empty($_GET['url'])){
+    $requestURL=$_GET['url'];
+}
+?>
